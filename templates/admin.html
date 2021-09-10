@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VocalForLocalBUZZ</title>
+    <link rel="icon" href="{% static 'image/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/vendorcss.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% include 'admin_header.html' %}
+    <br>
+    <div>
+        <ul class="message">
+            {% for message in messages %}
+            <script>alert('{{ message }}')</script>
+            {% endfor %}
+        </ul>
+     </div>
+    <div class="row">
+
+        <!--vendor request -->
+        <div class="col">
+            <table class="table table-bordered" style="margin-left:2%;width:100%; text-align: center">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Vendor Name</th>
+                        <th scope="col">Vendor details</th>
+                        <th scope="col">Approve</th>
+                        <th scope="col">Reject</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for vd in vendordetails %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ vd.VendorName}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vendor">
+							  Details
+                            </button>
+                        </td>
+                        <td>
+                            <a href="approve?user={{ vd.USERNAME }}">
+                                <button class="btn btn-primary">Approve</button>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="reject?user={{ vd.USERNAME }}">
+                                <button class="btn btn-danger">Reject</button>
+                            </a>
+                        </td>
+                    </tr>
+                    <!-- Vendor Details -->
+                    <div class="modal fade" id="vendor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  <div class="modal-dialog" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="exampleModalLabel">Vendor Details</h5>
+						        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						      </div>
+						      <div class="modal-body">
+						        <label>Shop Name</label>
+                                <input type="text" class="form-control" name="sname" value="{{ vd.ShopName }}">
+                                <label>Contact No.</label>
+                                <input type="text" class="form-control" name="cn" value="{{ vd.ContactNo }}">
+                                <label>Email</label>
+                                <input type="text" class="form-control" name="email" value="{{ vd.Email }}">
+                                <label>Pincode</label>
+                                <input type="text" class="form-control" name="pincode" value="{{ vd.Pincode }}">
+                                <label>Shop Address</label>
+                                <textarea name="sadd" rows="3" class="form-control" >{{ vd.ShopAddress }}</textarea>
+                                <label>About Shop</label>
+                                <textarea name="abs" rows="2" class="form-control" >{{ vd.AboutShop }}</textarea>
+                                <label>GST No.</label>
+                                <input type="text" name="gst" class="form-control" value="{{ vd.GSTNo }}">
+                                <label>License No.</label>
+                                <input type="text" name="ln" class="form-control" value="{{ vd.LicenseNo }}">
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						      </div>
+						    </div>
+						  </div>
+                    </div>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    <!--Product request -->
+        <div class="col">
+            <table class="table table-bordered" style="width: 98%; text-align: center">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Vendor details</th>
+                        <th scope="col">Approve</th>
+                        <th scope="col">Reject</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for pro in product %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ pro.ProductName}}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#product{{ pro.id }}">
+							  Details
+                            </button>
+                        </td>
+                        <td>
+                            <a href="product_approve?pro={{ pro.id }}">
+                                <button class="btn btn-primary">Approve</button>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="product_reject?pro={{ pro.id }}">
+                                <button class="btn btn-danger">Reject</button>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+{#                <tfoot>#}
+{#                    <tr>#}
+{#                        <th colspan="2">#}
+{#                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add Category</button>#}
+{#                        </th>#}
+{#                    </tr>#}
+{#                </tfoot>#}
+            </table>
+            <div class="modal fade" id="product{{ pro.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  <div class="modal-dialog" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="exampleModalLabel">Job Description</h5>
+						        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						      </div>
+						      <div class="modal-body">
+						        <label>Product Name:</label>
+                                    <input type="text" class="form-control" name="pname" value="{{ pro.ProductName }}"><br>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Product Price:</label>
+                                            <input type="text" class="form-control" name="pprice" value="{{ pro.ProductPrice }}">
+                                        </div>
+                                        <div class="col">
+                                            <label>Product Quantity:</label>
+                                            <input type="number" class="form-control" name="pquantity" value="{{ pro.ProductQuantity }}">
+                                        </div>
+                                    </div>
+                                    <label>Product Delivery Charge:</label>
+                                    <input type="number" class="form-control" name="pdc" value="{{ pro.ProductDeliveryCharge }}"><br>
+                                    <label>Product Brand</label>
+                                    <input type="text" class="form-control" name="pb" value="{{ pro.ProductBrand }}"><br>
+                                    <label><b>Upload Product Images </b></label>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Image 1</label><br>
+                                            <img src="{{ pro.ProductImage1.url }}" style="width: 50%; height: 50%"><br><br>
+                                        </div>
+                                    </div>
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

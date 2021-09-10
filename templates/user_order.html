@@ -1,0 +1,52 @@
+{% load cart %}
+{% load custom_filter %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>VocalForLocalBUZZ</title>
+    <link rel="icon" href="{% static 'image/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/vendorcss.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    {% include 'user_acc_header.html' %}
+    <div class="container">
+       <div class="border rounded p-4 m-4">
+            <p class="display-4 pl-4 ml-4">Your Orders</p>
+            <hr>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sno.</th>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Date</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td><img style="height: 80px;" class="rounded-bottom" src="{{ order.ProductImage.url }}" alt="product Image"></td>
+                        <td style="width: 20%">{{order.ProductName}}</td>
+                        <td>{{order.PlaceDate}}</td>
+                        <td>{{order.ProductPrice|currency}}</td>
+                        <td>{{order.ProductQuantity}}</td>
+                        <td>{{order.ProductQuantity|multiply:order.ProductPrice|currency}}</td>
+                        <td>{{ order.Status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+       </div>
+    </div>
+</body>
+</html>

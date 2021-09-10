@@ -1,0 +1,103 @@
+{% load static %}
+{% load custom_filter %}
+{% load cart %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+    <title>VocalForLocalBUZZ</title>
+    <link rel="icon" href="{% static 'image/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/vendorcss.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% include 'admin_header.html' %}
+    <br>
+    <div>
+        <ul class="message">
+            {% for message in messages %}
+            <script>alert('{{ message }}')</script>
+            {% endfor %}
+        </ul>
+     </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-bordered" style="width: 80%; margin-left: 10%; text-align: center">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Query subject</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Send Reply</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for ven in help %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ ven.name }}</td>
+                        <td>{{ ven.subject }}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#vendor{{ ven.id }}">Description</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#des{{ ven.id }}">Send Answer</button>
+                        </td>
+                    </tr>
+{#                    Description model#}
+                    <div class="modal fade" id="vendor{{ ven.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  <div class="modal-dialog" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="exampleModalLabel">Query Description</h5>
+						        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						      </div>
+						      <div class="modal-body">
+                                  <textarea name="des" class="form-control" maxlength="500">{{ ven.description }}</textarea>
+						      </div>
+						      <div class="modal-footer">
+						        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						      </div>
+						    </div>
+						  </div>
+                    </div>
+{#                    ans model#}
+                    <div class="modal fade" id="des{{ ven.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						  <div class="modal-dialog" role="document">
+						    <div class="modal-content">
+						      <div class="modal-header">
+						        <h5 class="modal-title" id="exampleModalLabel">Query Answer</h5>
+						        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+						      </div>
+                                <form action="{% url 'queries' %}" method="post">
+                                    {% csrf_token %}
+                                  <div class="modal-body">
+                                      <input type="hidden" name="disid" value="{{ ven.id }}">
+                                      <input type="hidden" name="user" value="{{ ven.name }}">
+                                      <input type="hidden" name="sub" value="{{ ven.subject }}">
+                                      <label>Enter Solution</label>
+                                      <textarea name="des" class="form-control" maxlength="500"></textarea>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Send Answer</button>
+                                  </div>
+                                </form>
+						    </div>
+						  </div>
+                    </div>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/loginstyel.css' %}">
+</head>
+<body>
+     <div>
+        <ul class="message">
+            {% for message in messages %}
+            <script>alert('{{ message }}')</script>
+            {% endfor %}
+        </ul>
+     </div>
+    <div class="hero">
+        <div class="form-box">
+            <div class="button-box">
+                <div id="btn"></div>
+                <button type="button" class="toggle-btn" onclick="login()">Log In</button>
+                <button type="button" class="toggle-btn" onclick="reg()">Register</button>
+            </div>
+            <form action="{% url 'login' %}" method="post" id="login" class="input-group">
+                {% csrf_token %}
+                <input type="text" name="username" class="input-field" placeholder="Username" required>
+                <input type="password" name="psw" class="input-field" placeholder="Enter Password" required>
+                <br><br><br>
+                <button type="submit" class="submit-btn">Log In</button><br><br><br>
+                <div style="text-align: center;">
+                    <span><a href="{% url 'forgot_password' %}">Forgot Password</a></span><br>
+                </div>
+            </form>
+
+            <form action="{% url 'Register' %}" method="post" id="register" class="input-group">
+                {% csrf_token %}
+                <input type="text" name="username" class="input-field" placeholder="Username" required>
+                <input type="password" name="psw" class="input-field" placeholder="Enter Password" required>
+                <input type="password" name="cpsw" class="input-field" placeholder="Re Enter Password" required>
+                <input type="email" name="email" class="input-field" placeholder="Email Id" required>
+{#                <select name="role" class="input-field">#}
+{#                    <option>Select Role.</option>#}
+{#                    <option value="user">User</option>#}
+{#                    <option value="vendor">Vendor</option>#}
+{#                </select>#}
+                <br><br>
+                <button type="submit" class="submit-btn">Register</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        var x = document.getElementById("login");
+        var y = document.getElementById("register");
+        var z = document.getElementById("btn");
+        function reg(){
+            x.style.left = "-400px";
+            y.style.left = "50px";
+            z.style.left = "110px";
+        }
+        function login(){
+            x.style.left = "50px";
+            y.style.left = "450px";
+            z.style.left = "0";
+        }
+    </script>
+</body>
+</html>

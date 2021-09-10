@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/vendorcss.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% include 'vendor_header.html' %}
+    <div>
+        <ul class="message">
+            {% for message in messages %}
+            <script>alert('{{ message }}')</script>
+            {% endfor %}
+        </ul>
+     </div>
+    <div class="row">
+        <div class="category">
+            <div class="box">
+                <div data-toggle="modal" data-target="#staticBackdrop">
+                    <img src="{% static 'image/plus.png' %}" class="plus-img" alt="plus">
+                    <p>Add Product</p>
+                </div>
+            </div>
+{#                model for add Product#}
+           <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Add Product</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="{% url 'addproduct' %}" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <label>Category name:</label>
+{#                                    <input type="text" class="form-control" name="user"  value="{{ user }}" disabled/><br>#}
+                                    <select class="form-control" name="category">
+                                        <option>Select Category...</option>
+                                        {% for ca in category %}
+                                        <option value="{{ ca.CATEGORY }}">{{ ca.CATEGORY }}</option>
+                                        {% endfor %}
+                                    </select><br>
+                                    <label>Product Name:</label>
+                                    <input type="text" class="form-control" name="pname" required><br>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Product Price:</label>
+                                            <input type="text" class="form-control" name="pprice" required>
+                                        </div>
+                                        <div class="col">
+                                            <label>Product Quantity:</label>
+                                            <input type="number" class="form-control" name="pquantity" required>
+                                        </div>
+                                    </div>
+                                    <label>Product Delivery Charge:</label>
+                                    <input type="number" class="form-control" name="pdc" required><br>
+                                    <label>Product Brand</label>
+                                    <input type="text" class="form-control" name="pb" required><br>
+                                    <label>Product Description:</label>
+                                    <textarea type="text" class="form-control" name="pdesc" required></textarea><br>
+                                    <label><b>Upload Product Images </b></label>
+                                    <div class="row">
+                                        <div class="col">
+                                            <label>Image 1</label><br>
+                                            <input type="file" name="img1" required><br><br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus-square"></i>&nbsp Lunch Product</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+{#            user category box#}
+            {% for pro in product %}
+                 <div class="box">
+                    <img src="{{ pro.ProductImage1.url }}" style=" width: 100px;height: 150px;border-radius: 13%">
+                    <div class="ftr" id="ftrp">
+                        <i class="fa fa-pencil-square" style="padding-left: 20%;padding-top: 8%" title="Edit Product" data-toggle="modal" data-target="#neer{{ pro.id }}"></i>
+                        <a href="delete_product?id={{ pro.id }}"><i class="fa fa-trash" style="padding-left: 20%;padding-top: 8%; color: black" title="Delete Product"></i></a>
+                    </div>
+                     <div class="name">
+{#                         <span>{{ pro.ProductName }}</span>#}
+                     </div>
+                </div>
+{#                Edit Product#}
+                <div class="modal fade" id="neer{{ pro.id }}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Edit Category</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="{% url 'editproduct' %}" method="post">
+                                {% csrf_token %}
+                                <div class="modal-body">
+                                    <input type="hidden" class="form-control" name="cid" value="{{ pro.id }}">
+                                    <label>Product name:</label>
+                                    <input type="text" class="form-control" name="name"  value="{{ pro.ProductName }}" disabled/>
+                                    <label>Product Price:</label>
+                                    <input type="text" class="form-control" name="price"  value="{{ pro.ProductPrice }}"/>
+                                    <label>Product Quantity:</label>
+                                    <input type="text" class="form-control" name="quantity"  value="{{ pro.ProductQuantity }}"/>
+                                    <label>Delivery Charge:</label>
+                                    <input type="text" class="form-control" name="delivery"  value="{{ pro.ProductDeliveryCharge }}"/><br><br>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus-square"></i>&nbsp;Update details</button>
+                                </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="notification">
+            <span style="font-family: 'Times New Roman'; font-size: 25px;margin-left: 20%;">Notifications</span><hr>
+            <div class="not">
+                {% for notify in notification %}
+                    <div class="box" id="box">
+                        <a href="close_notification?proid={{ notify.id }}"><i class="fa fa-times-circle" style="padding-left: 93.5%;color: black" title="close Notification"></i></a>
+                        <p><b>Your Product {{ notify.ProductName }} is {{ notify.Status }}</b></p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

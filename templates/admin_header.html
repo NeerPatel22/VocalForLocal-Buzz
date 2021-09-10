@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/vendorcss.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+     <div class="header">
+        <nav>
+            <ul>
+                <li><a class="#s" href="{% url 'admindashbord' %}"><i class="fa fa-shopping-bag"></i> Dashbord</a></li>
+                <li><a class="#" href="{% url 'vendor_product_display' %}"><i class="fa fa-id-card"></i> Vendor Details</a></li>
+                <li><a class="#" href="{% url 'admin_category' %}"><i class="fa fa-shopping-basket"></i> Category</a></li>
+                <li><a class="#" href="{% url 'queries' %}"><i class="fa fa-question-circle"></i> Queries</a></li>
+            </ul>
+            <ul id="user">
+                <li><a><i class="fa fa-user"></i>  {{ user }}</a>
+                    <ul>
+                        <li><a href="{% url 'admin_account' %}">My Account</a></li>
+                        <li><a href="{% url 'logout' %}">Log Out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>

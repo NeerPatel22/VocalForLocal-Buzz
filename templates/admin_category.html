@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VocalForLocalBUZZ</title>
+    <link rel="icon" href="{% static 'image/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/vendorcss.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% include 'admin_header.html' %}
+    <br>
+    <div>
+        <ul class="message">
+            {% for message in messages %}
+            <script>alert('{{ message }}')</script>
+            {% endfor %}
+        </ul>
+     </div>
+    <div class="row">
+        <div class="col">
+            <table class="table table-bordered" style="width: 90%; margin-left: 3%; text-align: center">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for cat in category %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ cat.CATEGORY }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="2">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add Category</button>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{% url 'addcategory' %}" method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <label for="username">Category name:</label>
+                                <input type="text" class="form-control" name="category" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-plus-square"></i>&nbsp;Add In to Category</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <table class="table table-bordered" style="width: 90%; text-align: center">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Requested Category</th>
+                        <th scope="col">Vendor who request</th>
+                        <th scope="col">Approve</th>
+                        <th scope="col">Reject</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for req in request %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ req.CATEGORY }}</td>
+                        <td>{{ req.categoryby }}</td>
+                         <td>
+{#                            <a href="#">#}
+                                <form action="{% url 'category_approve' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="cat" value="{{ req.id }}">
+                                    <button type="submit" class="btn btn-primary">Approve</button>
+                                </form>
+{#                            </a>#}
+                        </td>
+                        <td>
+                            <form action="{% url 'category_reject' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="cat" value="{{ req.id }}">
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
